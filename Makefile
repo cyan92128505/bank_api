@@ -1,12 +1,25 @@
+# Variable definitions
 DOCKER_IMAGE_NAME = bank-api
 DOCKER_IMAGE_TAG = latest
+DOCKERFILE_PATH = deployment/docker/Dockerfile
 
-.PHONY: all
-all: build
+# Development environment commands
+.PHONY: dev
+dev:
+	PYTHONPATH=. uvicorn cmd.server.main:app --reload --host 0.0.0.0 --port 8000
 
+.PHONY: test
+test:
+	pytest tests/
+
+.PHONY: lint
+lint:
+	flake8 .
+
+# Docker related commands
 .PHONY: build
 build:
-	docker build -t $(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG) .
+	docker build -t $(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG) -f $(DOCKERFILE_PATH) .
 
 .PHONY: up
 up:
@@ -43,14 +56,43 @@ clean:
 rebuild-image:
 	docker build --no-cache -t $(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_TAG) .
 
+# Database related commands
+.PHONY: db-migrate
+db-migrate:
+	./postgres.sh migrate
+
+.PHONY: db-generate
+db-generate:
+	./postgres.sh generate
+
+.PHONY: db-up
+db-up:
+	./postgres.sh up
+
+.PHONY: db-down
+db-down:
+	./postgres.sh down
+
+# Tool commands
 .PHONY: generate-secret-key
 generate-secret-key:
-	python tools/generate_secret_key.py
+	chmod +x scripts/generate_secret_key.sh
+	./scripts/generate_secret_key.sh
 
-# 幫助信息
+.PHONY: update-structure
+update-structure:
+	chmod +x scripts/dir_to_text.sh
+	./scripts/dir_to_text.sh
+
+# Help information
 .PHONY: help
 help:
 	@echo "Available commands:"
+	@echo "Development:"
+	@echo "  make dev                - Run the development server"
+	@echo "  make test               - Run tests"
+	@echo "  make lint               - Run linter"
+	@echo "Docker:"
 	@echo "  make build              - Build the Docker image"
 	@echo "  make up                 - Start the Docker Compose services"
 	@echo "  make up-d               - Start the Docker Compose services in detached mode"
@@ -61,4 +103,12 @@ help:
 	@echo "  make shell              - Open a shell in the web service container"
 	@echo "  make clean              - Clean up unused Docker resources"
 	@echo "  make rebuild-image      - Rebuild the Docker image without caching"
+	@echo "Database:"
+	@echo "  make db-help            - Show help for database operations"
+	@echo "  make db-migrate         - Run database migrations"
+	@echo "  make db-generate        - Generate a new migration"
+	@echo "  make db-up              - Apply all up migrations"
+	@echo "  make db-down            - Apply all down migrations"
+	@echo "Tools:"
 	@echo "  make generate-secret-key - Generate a new SECRET_KEY and update .env file"
+	@echo "  make update-structure   - Update the project structure file"
