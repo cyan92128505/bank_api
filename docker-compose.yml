@@ -3,7 +3,7 @@ version: "3.8"
 services:
   api:
     image: bank-api:latest
-    command: uvicorn cmd.server.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn commands.server.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/app
     ports:

@@ -19,4 +19,4 @@ COPY . .
 ENV PYTHONPATH=/app
 
 # Run the application
-CMD ["uvicorn", "cmd.server.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "commands.server.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -6,7 +6,7 @@ This is a bank service project implemented using Python, following Domain-Driven
 
 The project follows a structure inspired by Go standard layout, adapted for Python and DDD:
 
-- `cmd/`: Contains the main entry points for the application.
+- `commands/`: Contains the main entry points for the application.
 - `internal/`: Contains the core application code, divided into DDD layers.
 - `pkg/`: Contains library code that can be used by external applications.
 - `tests/`: Contains all test code, supporting TDD approach.
@@ -23,7 +23,7 @@ The project follows a structure inspired by Go standard layout, adapted for Pyth
    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
    ```
 3. Install dependencies: `pip install -r requirements.txt`
-4. Run the application: `python cmd/server/main.py`
+4. Run the application: `python commands/server/main.py`
 
 ## Running Tests
 

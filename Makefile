@@ -13,7 +13,7 @@ dev:
 	else \
 		echo "Warning: ./env file not found. Using default environment."; \
 	fi; \
-	uvicorn cmd.server.main:app --reload --host 0.0.0.0 --port 8000
+	PYTHONPATH=. uvicorn commands.server.main:app --reload --host 0.0.0.0 --port 8000
 
 
 .PHONY: test
