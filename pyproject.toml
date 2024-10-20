@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "bank_api"
 version = "0.1.0"
-description = "A bank service project using FastAPI, PostgreSQL, and Redis"
+description = "A Bank API project using FastAPI, PostgreSQL, and Redis"
 authors = ["cyan92128505 <cyan92128505@gmail.com>"]
 
 [tool.poetry.dependencies]

@@ -1,6 +1,6 @@
-# bank_service
+# bank_api
 
-This is a bank service project implemented using Python, following Domain-Driven Design (DDD) principles and Test-Driven Development (TDD) practices.
+This is a Bank API project implemented using Python, following Domain-Driven Design (DDD) principles and Test-Driven Development (TDD) practices.
 
 ## Project Structure
 
