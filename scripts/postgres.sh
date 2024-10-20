@@ -15,17 +15,13 @@ EOS
 }
 
 function help() { #cmd help
-    docker compose run --rm postgres
-}
 
-function migrate() { #cmd migrate
-    docker compose run --rm postgres $@
 }
 
 function generate() { #cmd generate $@
     printf "enter the generate table name:"
 	  read TABLE
-    migrate create -ext sql -dir migrations $TABLE
+    migrate create -ext sql -dir '../deployment/migration/postgresql/' $TABLE
 }
 
 function up () { #cmd up

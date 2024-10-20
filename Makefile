@@ -67,19 +67,19 @@ rebuild-image:
 # Database related commands
 .PHONY: db-migrate
 db-migrate:
-	./postgres.sh migrate
+	./scripts/postgres.sh migrate
 
 .PHONY: db-generate
 db-generate:
-	./postgres.sh generate
+	./scripts/postgres.sh generate
 
 .PHONY: db-up
 db-up:
-	./postgres.sh up
+	./scripts/postgres.sh up
 
 .PHONY: db-down
 db-down:
-	./postgres.sh down
+	./scripts/postgres.sh down
 
 # Tool commands
 .PHONY: generate-secret-key
