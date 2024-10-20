@@ -1,55 +1,47 @@
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from pkg.config.config import settings
-from pkg.logger import logger
-from pkg.database.postgres.connect_service import new_postgres_session, PostgresDatabaseConnectionError, DatabaseError
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from internal.presentation.restful.routes import add_routes
+from pkg.config import get_settings
+from pkg.database.postgres.connect_service import PostgresDatabaseConnectionError
+from pkg.logger import setup_logger
+from pkg.database.postgres import setup_database, close_database
+from pkg.shutdown import shutdown_event
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup event
-    logger.info(f"Starting up the application: {settings.API_NAME}")
+    # Startup
+    logger = setup_logger()
+    settings = get_settings()
+
     try:
-        # Establish database connection
-        db_session = new_postgres_session({"dsn": settings.DATABASE_URL})
-        app.state.db = db_session
-        logger.info("Database connection established")
+        app.state.db = await setup_database(settings)
     except PostgresDatabaseConnectionError as e:
         logger.error(f"Failed to connect to the database: {e}")
         raise
-
+    add_routes(app)
+    logger.info("Application startup complete")
+    
     yield
     
-    # Shutdown event
-    logger.info(f"Shutting down the application: {settings.API_NAME}")
+    # Shutdown
+    await shutdown_event()
     if hasattr(app.state, 'db'):
-        app.state.db.disconnect()
-        logger.info("Database connection closed")
+        await close_database(app.state.db)
+    logger.info("Application shutdown complete")
 
-app = FastAPI(title=settings.API_NAME, version="1.0.0", lifespan=lifespan)
+app = FastAPI(lifespan=lifespan)
 
 # CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Should be set to specific domains in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/")
-async def root():
-    return {"message": f"Welcome to {settings.API_NAME}"}
-
-@app.get("/db-test")
-async def db_test(request: Request):
-    try:
-        result = request.app.state.db.fetch_one("SELECT 1 as test")
-        return {"message": "Database connection successful", "result": result}
-    except DatabaseError as e:
-        logger.error(f"Database query failed: {e}")
-        raise HTTPException(status_code=500, detail="Database query failed")
-
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    settings = get_settings()
+    uvicorn.run("main:app", host="0.0.0.0", port=settings.SERVER_PORT, reload=True)
