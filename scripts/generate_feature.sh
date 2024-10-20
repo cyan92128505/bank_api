@@ -155,6 +155,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from internal.domain.usecases.${FEATURE_NAME_SNAKE}_usecase import I${FEATURE_NAME}UseCase
 from internal.application.services.${FEATURE_NAME_SNAKE}_service import ${FEATURE_NAME}Service
 from internal.domain.entities.${FEATURE_NAME_SNAKE} import ${FEATURE_NAME}
+from internal.domain.dto.restful.${FEATURE_NAME_SNAKE}_dto import ${FEATURE_NAME}CreateDTO, ${FEATURE_NAME}UpdateDTO, ${FEATURE_NAME}ResponseDTO
 
 router = APIRouter()
 
@@ -162,18 +163,18 @@ def get_${FEATURE_NAME_SNAKE}_service() -> I${FEATURE_NAME}UseCase:
     # TODO: Implement dependency injection
     pass
 
-@router.post("/${FEATURE_NAME_SNAKE}s")
-async def create_${FEATURE_NAME_SNAKE}(${FEATURE_NAME_SNAKE}_data: dict, service: I${FEATURE_NAME}UseCase = Depends(get_${FEATURE_NAME_SNAKE}_service)):
+@router.post("/${FEATURE_NAME_SNAKE}s", response_model=${FEATURE_NAME}ResponseDTO)
+async def create_${FEATURE_NAME_SNAKE}(${FEATURE_NAME_SNAKE}_data: ${FEATURE_NAME}CreateDTO, service: I${FEATURE_NAME}UseCase = Depends(get_${FEATURE_NAME_SNAKE}_service)):
     # TODO: Implement creation route logic
     pass
 
-@router.get("/${FEATURE_NAME_SNAKE}s/{${FEATURE_NAME_SNAKE}_id}")
+@router.get("/${FEATURE_NAME_SNAKE}s/{${FEATURE_NAME_SNAKE}_id}", response_model=${FEATURE_NAME}ResponseDTO)
 async def get_${FEATURE_NAME_SNAKE}(${FEATURE_NAME_SNAKE}_id: int, service: I${FEATURE_NAME}UseCase = Depends(get_${FEATURE_NAME_SNAKE}_service)):
     # TODO: Implement retrieval route logic
     pass
 
-@router.put("/${FEATURE_NAME_SNAKE}s/{${FEATURE_NAME_SNAKE}_id}")
-async def update_${FEATURE_NAME_SNAKE}(${FEATURE_NAME_SNAKE}_id: int, ${FEATURE_NAME_SNAKE}_data: dict, service: I${FEATURE_NAME}UseCase = Depends(get_${FEATURE_NAME_SNAKE}_service)):
+@router.put("/${FEATURE_NAME_SNAKE}s/{${FEATURE_NAME_SNAKE}_id}", response_model=${FEATURE_NAME}ResponseDTO)
+async def update_${FEATURE_NAME_SNAKE}(${FEATURE_NAME_SNAKE}_id: int, ${FEATURE_NAME_SNAKE}_data: ${FEATURE_NAME}UpdateDTO, service: I${FEATURE_NAME}UseCase = Depends(get_${FEATURE_NAME_SNAKE}_service)):
     # TODO: Implement update route logic
     pass
 
@@ -182,6 +183,30 @@ async def delete_${FEATURE_NAME_SNAKE}(${FEATURE_NAME_SNAKE}_id: int, service: I
     # TODO: Implement deletion route logic
     pass
 EOF
+
+
+# Create DTO files
+mkdir -p internal/domain/dto/restful
+touch internal/domain/dto/restful/${FEATURE_NAME_SNAKE}_dto.py
+cat << EOF > internal/domain/dto/restful/${FEATURE_NAME_SNAKE}_dto.py
+from pydantic import BaseModel
+from typing import Optional
+
+class ${FEATURE_NAME}CreateDTO(BaseModel):
+    # TODO: Add fields for creating a new ${FEATURE_NAME}
+    pass
+
+class ${FEATURE_NAME}UpdateDTO(BaseModel):
+    # TODO: Add fields for updating an existing ${FEATURE_NAME}
+    pass
+
+class ${FEATURE_NAME}ResponseDTO(BaseModel):
+    id: int
+    # TODO: Add fields for ${FEATURE_NAME} response
+    created_at: str
+    updated_at: str
+EOF
+
 
 # Create test files
 mkdir -p tests/unit/domain
@@ -235,6 +260,7 @@ echo "  - Repository Implementation: internal/infrastructure/persistence/postgre
 echo "  - PO (Persistent Object): internal/infrastructure/po/postgres/${FEATURE_NAME_SNAKE}_po.py"
 echo "- Presentation Layer:"
 echo "  - API Handler: internal/presentation/restful/handlers/${FEATURE_NAME_SNAKE}_handler.py"
+echo "  - DTO (Data Transfer Object): internal/domain/dto/restful/${FEATURE_NAME_SNAKE}_dto.py"
 echo "- Tests:"
 echo "  - Unit Tests: tests/unit/domain/test_${FEATURE_NAME_SNAKE}.py"
 echo "  - Integration Tests: tests/integration/test_${FEATURE_NAME_SNAKE}_api.py"
