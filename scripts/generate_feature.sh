@@ -127,6 +127,26 @@ class ${FEATURE_NAME}Repository(I${FEATURE_NAME}Repository):
         pass
 EOF
 
+# Create PO file
+mkdir -p internal/infrastructure/po
+touch internal/infrastructure/po/${FEATURE_NAME_SNAKE}_po.py
+cat << EOF > internal/infrastructure/po/${FEATURE_NAME_SNAKE}_po.py
+from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
+class ${FEATURE_NAME}PO(Base):
+    __tablename__ = '${FEATURE_NAME_SNAKE}s'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    # TODO: Add more columns as needed
+    created_at = Column(DateTime, nullable=False)
+    updated_at = Column(DateTime, nullable=False)
+
+    # TODO: Implement any necessary methods
+EOF
+
 # Create presentation layer files
 mkdir -p internal/presentation/restful/handlers
 touch internal/presentation/restful/handlers/${FEATURE_NAME_SNAKE}_handler.py
@@ -212,6 +232,7 @@ echo "- Application Layer:"
 echo "  - Service: internal/application/services/${FEATURE_NAME_SNAKE}_service.py"
 echo "- Infrastructure Layer:"
 echo "  - Repository Implementation: internal/infrastructure/persistence/postgres/${FEATURE_NAME_SNAKE}_repository.py"
+echo "  - PO (Persistent Object): internal/infrastructure/po/${FEATURE_NAME_SNAKE}_po.py"
 echo "- Presentation Layer:"
 echo "  - API Handler: internal/presentation/restful/handlers/${FEATURE_NAME_SNAKE}_handler.py"
 echo "- Tests:"
