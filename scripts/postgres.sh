@@ -15,7 +15,7 @@ EOS
 }
 
 function help() { #cmd help
-
+	echo 'help'
 }
 
 function generate() { #cmd generate $@

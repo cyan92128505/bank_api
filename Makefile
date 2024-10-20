@@ -6,14 +6,14 @@ DOCKERFILE_PATH = deployment/docker/Dockerfile
 # Development environment commands
 .PHONY: dev
 dev:
-	@if [ -f ./env ]; then \
+	@if [ -f .env ]; then \
 		set -a; \
-		source ./env; \
+		source .env; \
 		set +a; \
 	else \
-		echo "Warning: ./env file not found. Using default environment."; \
+		echo "Warning: .env file not found. Using default environment."; \
 	fi; \
-	PYTHONPATH=. uvicorn commands.server.main:app --reload --host 0.0.0.0 --port 8000
+	PYTHONPATH=. uvicorn commands.server.main:app --reload --host 0.0.0.0 --port $${SERVER_PORT:-8000}
 
 
 .PHONY: test
