@@ -128,9 +128,9 @@ class ${FEATURE_NAME}Repository(I${FEATURE_NAME}Repository):
 EOF
 
 # Create PO file
-mkdir -p internal/infrastructure/po
-touch internal/infrastructure/po/${FEATURE_NAME_SNAKE}_po.py
-cat << EOF > internal/infrastructure/po/${FEATURE_NAME_SNAKE}_po.py
+mkdir -p internal/infrastructure/po/postgres/
+touch internal/infrastructure/po/postgres/${FEATURE_NAME_SNAKE}_po.py
+cat << EOF > internal/infrastructure/po/postgres/${FEATURE_NAME_SNAKE}_po.py
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -232,7 +232,7 @@ echo "- Application Layer:"
 echo "  - Service: internal/application/services/${FEATURE_NAME_SNAKE}_service.py"
 echo "- Infrastructure Layer:"
 echo "  - Repository Implementation: internal/infrastructure/persistence/postgres/${FEATURE_NAME_SNAKE}_repository.py"
-echo "  - PO (Persistent Object): internal/infrastructure/po/${FEATURE_NAME_SNAKE}_po.py"
+echo "  - PO (Persistent Object): internal/infrastructure/po/postgres/${FEATURE_NAME_SNAKE}_po.py"
 echo "- Presentation Layer:"
 echo "  - API Handler: internal/presentation/restful/handlers/${FEATURE_NAME_SNAKE}_handler.py"
 echo "- Tests:"
