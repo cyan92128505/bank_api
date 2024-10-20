@@ -1,0 +1,8 @@
+FROM migrate/migrate
+LABEL maintainer="cyan92128505@gmail.com"
+
+ADD ./deployments/migrations/postgresql /migrations
+
+ENTRYPOINT ["/migrate"]
+
+CMD ["--help"]
